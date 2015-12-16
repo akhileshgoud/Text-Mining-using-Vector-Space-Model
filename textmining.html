@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="keywords" content="Akhilesh Goud, Text Mining, Vector Space Model, etc.">
+    <meta name="description" content="I am Akhilesh Goud, a computer science graduate student actively looking for opportunities in web, software and application development. I am a graphic designer too.">
+    <meta name="author" content="Akhilesh Goud">
+	
+    <title>Text Mining | Vector Space Model</title>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	
+	<style>body {color: #666;overflow-x: hidden;}#content, #footer {text-align: center;} #submitbtn {background-color: #666; color: #fff;}</style>
+</head>
+<body>
+
+		<div id="content" class="container">
+            <div class="row">
+                <div class="col-xs-12 col-md-6 col-md-offset-3">
+					<h2><strong><br/>Text Mining using Vector Space Model</strong></h2><br/>
+					<br/> <p> This program takes keywords as input terms that form a sad or congratulatory context, then looks up (searches) the word in the pre-defined training dataset to find their TF-IDF values. 
+							  Later it calculates the similarity using cosine function (Vector Space Model) and predicts the context for the given terms based on this similarity measure.</p><br/> 
+						<h4>Please enter any 12 terms with either sad or congratulatory context:</h4>
+							<form name="myForm">
+							  <div>
+							  <input type="text" id="term1" placeholder="Term 1">
+							  <input type="text" id="term2" placeholder="Term 2">
+							  <input type="text" id="term3" placeholder="Term 3">
+							  <input type="text" id="term4" placeholder="Term 4">
+							  <input type="text" id="term5" placeholder="Term 5">
+							  <input type="text" id="term6" placeholder="Term 6">
+							  <input type="text" id="term7" placeholder="Term 7">
+							  <input type="text" id="term8" placeholder="Term 8">
+							  <input type="text" id="term9" placeholder="Term 9">
+							  <input type="text" id="term10" placeholder="Term 10">
+							  <input type="text" id="term11" placeholder="Term 11">
+							  <input type="text" id="term12" placeholder="Term 12">
+							  </div>
+							  <br/><br/><center><input type="button" id="submitbtn" value="TEST" class="btn btn-lg btn-block"></center>
+							</form>
+                </div>
+            </div>
+			<br/><br/>
+			<div class="row">
+                <div class="col-xs-12 col-md-6 col-md-offset-3">
+					<div id="result"></div>
+                </div>
+            </div>
+		</div>
+		<br/><br/><br/>
+		<div id="footer" class="row">
+			<div class="col-sm-12 col-md-6 col-md-offset-3">
+				<p>
+					© 2015 <a href="http://www.akhileshgoud.me" target="_blank">Akhilesh Goud</a>
+				</p>
+			</div>
+		</div>
+
+		<script>
+		document.getElementById("submitbtn").addEventListener("click", myFunction);
+		function myFunction() {		
+			var s = ["sorry", "inform", "your", "dog", "dead", "surgery", "yesterday", "couple", "accident", "deep", "condolences", "lose", "application", "rejected", "thorough", "review", "panel", "experts", "decided", "pursue", "candidates", "position", "afraid", "bad", "news", "credit", "card", "low", "please", "apply", "later", "future", "regret", "loan", "insufficient", "funds", "assets", "support", "thanks", "time", "interview", "unfortunately", "different", "direction", "luck", "other", "opportunities", "congratulations", "accepted", "program", "MS", "university", "attached", "admit", "letter", "further", "steps", "taken", "glad", "developer", "company", "forms", "submit", "processing", "good", "full", "benefits", "active", "confirm", "won", "lottery", "dollars", "send", "details", "identity", "reward", "hear", "got", "selected", "national", "basketball", "competition", "representing", "college", "event"];
+			var idf = [0.78, 0.54, 0.38, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 0.54, 0.63, 1.04, 0.78, 1.04, 1.04, 0.78, 1.04, 1.04, 0.63, 1.04, 1.04, 0.78, 1.04, 1.04, 1.04, 0.48, 0.78, 0.78, 0.78, 1.04, 0.78, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 0.78, 0.78, 1.04, 0.63, 0.63, 1.04, 1.04, 1.04, 0.78, 1.04, 1.04, 0.54, 1.04, 1.04, 0.78, 1.04, 1.04, 0.78, 1.04, 0.63, 0.78, 1.04, 1.04, 1.04, 0.78, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04];
+			var input = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+		
+			var term1 = document.getElementById("term1").value;
+			var term2 = document.getElementById("term2").value;
+			var term3 = document.getElementById("term3").value;
+			var term4 = document.getElementById("term4").value;
+			var term5 = document.getElementById("term5").value;
+			var term6 = document.getElementById("term6").value;
+			var term7 = document.getElementById("term7").value;
+			var term8 = document.getElementById("term8").value;
+			var term9 = document.getElementById("term9").value;
+			var term10 = document.getElementById("term10").value;
+			var term11 = document.getElementById("term11").value;
+			var term12 = document.getElementById("term12").value;
+			
+			if (term1.match(/^\s*$/) || term2.match(/^\s*$/) || term3.match(/^\s*$/) || term4.match(/^\s*$/) || term5.match(/^\s*$/) || term6.match(/^\s*$/) || term7.match(/^\s*$/) || term8.match(/^\s*$/) || term9.match(/^\s*$/) || term10.match(/^\s*$/) || term11.match(/^\s*$/) || term12.match(/^\s*$/)) {
+				document.getElementById("result").style.color = "Red";
+				document.getElementById("result").innerHTML = "<h4>Please provide all the terms!</h4>"
+				return false;
+			}
+			
+			function mySearchFunction(t) {
+				for (var a=0; a<s.length; a++){
+				if (s[a].match(t)){
+					if (input[a] != 0) {
+						input[a] = input[a] + idf[a];
+					} else input[a] = idf[a];
+					}
+				}
+			}
+			
+			mySearchFunction(term1);
+			mySearchFunction(term2);
+			mySearchFunction(term3);
+			mySearchFunction(term4);
+			mySearchFunction(term5);
+			mySearchFunction(term6);
+			mySearchFunction(term7);
+			mySearchFunction(term8);
+			mySearchFunction(term9);
+			mySearchFunction(term10);
+			mySearchFunction(term11);
+			mySearchFunction(term12);
+				
+			var sv1 = [0.78, 0.54, 0.76, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+			var sv2 = [0.78, 0.54, 0.38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.54, 0.63, 1.04, 0.78, 1.04, 1.04, 0.78, 1.04, 1.04, 1.26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.78, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+			var sv3 = [0, 0, 0.38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.54, 0.63, 0, 0, 0, 0, 0, 0, 0, 0, 1.04, 1.04, 0.78, 2.08, 1.04, 1.04, 0.48, 0.78, 0.78, 0.78, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+			var sv4 = [0, 0.54, 0.76, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.08, 0.63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.48, 0.78, 0.78, 0.78, 1.04, 0.78, 1.04, 1.04, 1.04, 1.04, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+			var sv5 = [0, 0, 0.76, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.78, 0, 0, 0.63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2.08, 1.04, 1.04, 1.04, 1.04, 1.04, 0.78, 0.78, 1.04, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+			var cv1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.78, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.63, 0.63, 1.04, 1.04, 1.04, 0.78, 1.04, 1.04, 0.54, 1.04, 1.04, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+			var cv2 = [0, 0.54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.63, 0.63, 0, 0, 0, 0.78, 0, 0, 0.54, 0, 0, 0.78, 1.04, 1.04, 0.78, 1.04, 0.63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+			var cv3 = [0, 0, 0.38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.78, 0, 0, 0, 0.48, 0, 0, 0, 0, 0.78, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.63, 0, 0, 0, 0, 0, 0, 0.54, 0, 0, 0, 0, 0, 0.78, 0, 0.63, 0.78, 1.04, 1.04, 1.04, 0.78, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+			var cv4 = [0, 0, 1.14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.63, 0, 0, 0, 0, 0, 0, 0, 0.54, 0, 0, 0, 0, 0, 0, 0, 0.63, 0, 0, 0, 0, 0.78, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+			var cv5 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.78, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.78, 0, 0, 0, 0, 0, 0.78, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04, 1.04];
+			var res = "";
+			var output = 0;
+			
+			function cosineSimilarityFunction(sc) {
+				var dotProduct = 0;
+				var normA = 0;
+				var normB = 0;
+				for (var i = 0; i < sc.length; i++) {
+					dotProduct += sc[i] * input[i];
+					normA += Math.pow(sc[i], 2);
+					normB += Math.pow(input[i], 2);
+				}
+				return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+			}
+			
+			var output1 = cosineSimilarityFunction(sv1);
+			var output2 = cosineSimilarityFunction(sv2);
+			
+			if (output1 >= output2){
+				output = output1;
+				res = "<h4>Your input indicates that the context is most likely <strong>SAD</strong>!</h4>";
+			} else {
+				output = output2;
+				res = "<h4>Your input indicates that the context is most likely <strong>SAD</strong>!</h4>";
+			}
+			
+			var output3 = cosineSimilarityFunction(sv3);
+			if (output >= output3){} else {
+				output = output3;
+				res = "<h4>Your input indicates that the context is most likely <strong>SAD</strong>!</h4>";
+			}
+			
+			var output4 = cosineSimilarityFunction(sv4);
+			if (output >= output4){} else {
+				output = output4;
+				res = "<h4>Your input indicates that the context is most likely <strong>SAD</strong>!</h4>";
+			}
+			
+			var output5 = cosineSimilarityFunction(sv5);
+			if (output >= output5){} else {
+				output = output5;
+				res = "<h4>Your input indicates that the context is most likely <strong>SAD</strong>!</h4>";
+			}
+			
+			var output6 = cosineSimilarityFunction(cv1);
+			if (output >= output6){} else {
+				output = output6;
+				res = "<h4>Your input indicates that the context is most likely <strong>CONGRATULATORY</strong>!</h4>";
+			}
+			
+			var output7 = cosineSimilarityFunction(cv2);
+			if (output >= output7){} else {
+				output = output7;
+				res = "<h4>Your input indicates that the context is most likely <strong>CONGRATULATORY</strong>!</h4>";
+			}
+			
+			var output8 = cosineSimilarityFunction(cv3);
+			if (output >= output8){} else {
+				output = output8;
+				res = "<h4>Your input indicates that the context is most likely <strong>CONGRATULATORY</strong>!</h4>";
+			}
+			
+			var output9 = cosineSimilarityFunction(cv4);
+			if (output >= output9){} else {
+				output = output9;
+				res = "<h4>Your input indicates that the context is most likely <strong>CONGRATULATORY</strong>!</h4>";
+			}
+			
+			var output10 = cosineSimilarityFunction(cv5);
+			if (output >= output10){} else {
+				output = output10;
+				res = "<h4>Your input indicates that the context is most likely <strong>CONGRATULATORY</strong>!</h4>";
+			}
+			
+			document.getElementById("result").style.color = "Black";
+			document.getElementById("result").innerHTML = res;
+			/*document.getElementById("result").innerHTML = input;
+			document.getElementById("result").innerHTML += output1;
+			document.getElementById("result").innerHTML += output2;
+			document.getElementById("result").innerHTML += output3;
+			document.getElementById("result").innerHTML += output4;
+			document.getElementById("result").innerHTML += output5;
+			document.getElementById("result").innerHTML += output6;
+			document.getElementById("result").innerHTML += output7;
+			document.getElementById("result").innerHTML += output8;
+			document.getElementById("result").innerHTML += output9;
+			document.getElementById("result").innerHTML += output10;
+			document.getElementById("result").innerHTML += output;*/
+		}
+		</script>
+</body>
+</html>
